@@ -13,9 +13,10 @@ describe('NotesModel', () => {
   });
   it('clears the list if reset', () => {
     const model = new NotesModel();
+    expect(model.getNotes()).toStrictEqual([]);
     model.addNote('Buy milk');
     model.addNote('Go to the gym');
     model.reset();
     expect(model.getNotes()).toStrictEqual([]);
-  })
+  });
 })
