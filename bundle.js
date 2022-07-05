@@ -25,10 +25,48 @@
     }
   });
 
+  // notesView.js
+  var require_notesView = __commonJS({
+    "notesView.js"(exports, module) {
+      var NotesView2 = class {
+        constructor(model2) {
+          this.mainContainerEl = document.querySelector("#main-container");
+          this.model = model2;
+          this.buttonEl = document.querySelector("#add-note-btn");
+          this.buttonEl.addEventListener("click", () => {
+            this.addNewNote();
+            this.displayNotes();
+          });
+        }
+        displayNotes() {
+          document.querySelectorAll(".note").forEach((eachNote) => eachNote.remove());
+          this.model.getNotes().forEach((eachNote) => {
+            let div = document.createElement("div");
+            div.setAttribute("class", "note");
+            div.append(eachNote);
+            div.setAttribute("id", "Test");
+            this.mainContainerEl.append(div);
+          });
+        }
+        addNewNote() {
+          const inputEl = document.querySelector("#new-note");
+          console.log("Helloooo");
+          console.log(inputEl.value);
+          this.model.addNote(inputEl.value);
+          inputEl.value = "";
+        }
+      };
+      module.exports = NotesView2;
+    }
+  });
+
   // index.js
   var NotesModel = require_notesModel();
-  var model = new NotesModel();
+  var NotesView = require_notesView();
   console.log("The notes app is running");
-  console.log("The list has been initialised. The current notes:");
+  var model = new NotesModel();
   console.log(model.getNotes());
+  var view = new NotesView(model);
+  view.addNewNote();
+  view.displayNotes();
 })();
