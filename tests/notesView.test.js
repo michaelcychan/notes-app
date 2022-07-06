@@ -3,6 +3,7 @@
  */
 
 const NotesModel = require("../notesModel");
+const NotesApi = require('../notesApi');
 const NotesView = require("../notesView");
 const fs = require("fs");
  
@@ -10,7 +11,8 @@ describe("NotesView", () => {
   it("displays one note", () => {
     document.body.innerHTML = fs.readFileSync(__dirname + '/../index.html');
     const model = new NotesModel();
-    const view = new NotesView(model);
+    const api = new NotesApi();
+    const view = new NotesView(model, api);
     model.addNote("This is the first Note");
  
     view.displayNotes();
@@ -20,7 +22,8 @@ describe("NotesView", () => {
   it("displays multiple notes", () => {
     document.body.innerHTML = fs.readFileSync(__dirname + "/../index.html");
     const model = new NotesModel();
-    const view = new NotesView(model);
+    const api = new NotesApi();
+    const view = new NotesView(model, api);
     model.addNote("This is the first Note");
     model.addNote("This is the second Note");
     model.addNote("This is the third Note");
@@ -32,7 +35,8 @@ describe("NotesView", () => {
   it("clicks button and adds new notes title", () => {
     document.body.innerHTML = fs.readFileSync(__dirname + "/../index.html");
     const model = new NotesModel();
-    const view = new NotesView(model);
+    const api = new NotesApi();
+    const view = new NotesView(model, api);
 
     const inputEl = document.querySelector("#new-note");
     inputEl.value = "Hello World";
@@ -46,17 +50,40 @@ describe("NotesView", () => {
     );
   });
   it("clicks button and keeps the same number of note ", () => {
-  document.body.innerHTML = fs.readFileSync(__dirname + "/../index.html");
-  const model = new NotesModel();
-  const view = new NotesView(model);
+    document.body.innerHTML = fs.readFileSync(__dirname + "/../index.html");
+    const model = new NotesModel();
+    const api = new NotesApi();
+    const view = new NotesView(model, api);
 
-  model.addNote("Hello 👋 World");
-  model.addNote("Go 🗺️ to the world!")
-  
-  view.displayNotes()
-  view.displayNotes()
+    model.addNote("Hello 👋 World");
+    model.addNote("Go 🗺️ to the world!");
+    
+    view.displayNotes()
+    view.displayNotes()
 
-  expect(document.body.querySelectorAll("div.note").length).toStrictEqual(2);
+    expect(document.body.querySelectorAll("div.note").length).toStrictEqual(2);
   });
+  describe('displayNotesFromApi', () => {
+    it('calls notes on api and calls model class displayNotes function', () => {
+      // setting up the environment
+      document.body.innerHTML = fs.readFileSync(__dirname + "/../index.html");
+      const model = new NotesModel();
+
+      // mocking the required callback function,
+      // because the api is fake, can't take any callback function
+      const fakeApi = {
+        loadNotes: () => {
+          model.setNotes(["No idea 🤔 what to do", 'Completely confused 😕 on this task'])
+          view.displayNotes();
+        }
+      }
+      const view = new NotesView(model, fakeApi);
+
+      // running the actual view.displayNotesFromApi()
+      // add a console.log in displayNotesFromApi() can confirm it was really called
+      view.displayNotesFromApi();
+      expect(document.body.querySelectorAll("div.note").length).toStrictEqual(2);
+    })
+  })
 });
 

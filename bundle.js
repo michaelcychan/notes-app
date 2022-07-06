@@ -17,6 +17,11 @@
         addNote(note) {
           this.list.push(note);
         }
+        setNotes(notes) {
+          notes.forEach((note) => {
+            this.addNote(note);
+          });
+        }
         reset() {
           this.list = [];
         }
@@ -29,9 +34,10 @@
   var require_notesView = __commonJS({
     "notesView.js"(exports, module) {
       var NotesView2 = class {
-        constructor(model2) {
+        constructor(model2, api2) {
           this.mainContainerEl = document.querySelector("#main-container");
           this.model = model2;
+          this.api = api2;
           this.buttonEl = document.querySelector("#add-note-btn");
           this.buttonEl.addEventListener("click", () => {
             this.addNewNote();
@@ -50,23 +56,43 @@
         }
         addNewNote() {
           const inputEl = document.querySelector("#new-note");
-          console.log("Helloooo");
-          console.log(inputEl.value);
           this.model.addNote(inputEl.value);
           inputEl.value = "";
+        }
+        displayNotesFromApi() {
+          this.api.loadNotes((notes) => {
+            this.model.setNotes(notes);
+            this.displayNotes();
+          });
         }
       };
       module.exports = NotesView2;
     }
   });
 
+  // notesApi.js
+  var require_notesApi = __commonJS({
+    "notesApi.js"(exports, module) {
+      var NotesApi2 = class {
+        loadNotes(callbackFunction) {
+          fetch("http://localhost:3000/notes").then((response) => response.json()).then((data) => {
+            callbackFunction(data);
+          });
+        }
+      };
+      module.exports = NotesApi2;
+    }
+  });
+
   // index.js
   var NotesModel = require_notesModel();
   var NotesView = require_notesView();
+  var NotesApi = require_notesApi();
   console.log("The notes app is running");
+  var api = new NotesApi();
   var model = new NotesModel();
+  var view = new NotesView(model, api);
   console.log(model.getNotes());
-  var view = new NotesView(model);
   view.addNewNote();
-  view.displayNotes();
+  view.displayNotesFromApi();
 })();

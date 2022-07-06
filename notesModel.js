@@ -8,6 +8,12 @@ class NotesModel {
   addNote(note) {
     this.list.push(note);
   }
+  setNotes(notes) {
+    notes.forEach((note) => {
+      this.addNote(note);
+    })
+  }
+
   reset(){
     this.list = [];
   }

@@ -1,7 +1,8 @@
 class NotesView {
-  constructor(model) {
+  constructor(model, api) {
     this.mainContainerEl = document.querySelector("#main-container");
     this.model = model;
+    this.api = api;
     this.buttonEl = document.querySelector("#add-note-btn");
     this.buttonEl.addEventListener("click", () => {
       this.addNewNote();
@@ -24,6 +25,13 @@ class NotesView {
     const inputEl = document.querySelector("#new-note");
     this.model.addNote(inputEl.value);
     inputEl.value = ""
+  }
+
+  displayNotesFromApi() {
+    this.api.loadNotes((notes) => { //using API call back function
+      this.model.setNotes(notes);
+      this.displayNotes();
+    })
   }
 }
 
