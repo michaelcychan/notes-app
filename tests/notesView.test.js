@@ -5,7 +5,6 @@
 const NotesModel = require("../notesModel");
 const NotesApi = require('../notesApi');
 const NotesView = require("../notesView");
-// require ('jest-fetch-mock').enableFetchMocks();
 const fs = require("fs");
  
 describe("NotesView", () => {
