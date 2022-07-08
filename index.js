@@ -8,7 +8,7 @@ const api = new NotesApi();
 const model = new NotesModel();
 const view = new NotesView(model, api);
 
-console.log(model.getNotes());
+// console.log(model.getNotes());
+// view.addNewNote();
 
-view.addNewNote();
 view.displayNotesFromApi();

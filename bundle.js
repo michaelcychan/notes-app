@@ -66,7 +66,13 @@
             this.model.reset();
             this.model.setNotes(notes);
             this.displayNotes();
-          });
+          }, this.displayError());
+        }
+        displayError() {
+          let divError = document.createElement("div");
+          divError.setAttribute("class", "error");
+          divError.innerText = "Ooops, something went wrong!";
+          this.mainContainerEl.append(divError);
         }
       };
       module.exports = NotesView2;
@@ -77,10 +83,12 @@
   var require_notesApi = __commonJS({
     "notesApi.js"(exports, module) {
       var NotesApi2 = class {
-        loadNotes(callbackFunction) {
-          fetch("http://localhost:3000/notes").then((response) => response.json()).then((data) => {
+        loadNotes(callbackFunction, failureFunction) {
+          const fetchPromise = fetch("http://localhost:3000/notes");
+          fetchPromise.then((response) => response.json()).then((data) => {
             callbackFunction(data);
           });
+          fetchPromise.catch(() => failureFunction());
         }
         createNote(newNote) {
           const contentObj = { "content": newNote };
@@ -105,7 +113,5 @@
   var api = new NotesApi();
   var model = new NotesModel();
   var view = new NotesView(model, api);
-  console.log(model.getNotes());
-  view.addNewNote();
   view.displayNotesFromApi();
 })();

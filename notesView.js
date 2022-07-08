@@ -26,7 +26,6 @@ class NotesView {
     if (inputEl.value != "") {
       this.api.createNote(inputEl.value)
     }
-    // this.model.addNote(inputEl.value);
     inputEl.value = ""
   }
 
@@ -35,9 +34,15 @@ class NotesView {
       this.model.reset();
       this.model.setNotes(notes);
       this.displayNotes();
-    })
+    },
+    this.displayError())
+  }
+  displayError() {
+    let divError = document.createElement('div');
+    divError.setAttribute("class", "error");
+    divError.innerText = 'Ooops, something went wrong!'
+    this.mainContainerEl.append(divError);
   }
 }
-
 
 module.exports = NotesView;
