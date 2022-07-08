@@ -3,7 +3,7 @@ require ('jest-fetch-mock').enableFetchMocks()
 
 
 // The following test must fail because the NoteApi class does not have loadData()
-// It is to show that even there is a fetch mock, the class itself is involved.
+// It is to show that even there is a fetch mock, the class itself is involved, although not fully.
 xdescribe('NotesApi', () => {
   it('calls fetch and loads data', () => {
     const api = new NotesApi();

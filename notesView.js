@@ -30,14 +30,15 @@ class NotesView {
   }
 
   displayNotesFromApi() {
-    this.api.loadNotes((notes) => { //using API call back function
+    this.api.loadNotes((notes) => { // First callback is when fetch is successful
       this.model.reset();
       this.model.setNotes(notes);
       this.displayNotes();
-    },
-    this.displayError())
+    }, () => { // Second callback is when fetch is unsuccessful
+      this.displayError();
+    })
   }
-  displayError() {
+  displayError() { // it is called by api class when there is an error for fetch
     let divError = document.createElement('div');
     divError.setAttribute("class", "error");
     divError.innerText = 'Ooops, something went wrong!'

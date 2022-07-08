@@ -93,7 +93,7 @@ describe("NotesView", () => {
       view.displayNotesFromApi();
       expect(document.body.querySelectorAll("div.note").length).toStrictEqual(2);
     });
-    fit('displays errors when there is no connection', () => {
+    it('displays errors when there is no connection', () => {
       // setting up the environment
       document.body.innerHTML = fs.readFileSync(__dirname + "/../index.html");
       const model = new NotesModel();
@@ -108,10 +108,9 @@ describe("NotesView", () => {
 
       // how to know the fetch fails??
       view.displayNotesFromApi();
-      console.log(document.body.querySelectorAll("div.error")[1])
+      console.log(document.body.querySelectorAll("div.error")[0].innerText)
       expect(document.body.querySelectorAll("div.error").length).toStrictEqual(1);
-      expect(document.body.querySelector("div.error")).toStrictEqual("Ooops, something went wrong!")
-
+      expect(document.body.querySelector("div.error").innerText).toStrictEqual("Ooops, something went wrong!")
     })
   });
 });

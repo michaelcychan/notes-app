@@ -66,7 +66,9 @@
             this.model.reset();
             this.model.setNotes(notes);
             this.displayNotes();
-          }, this.displayError());
+          }, () => {
+            this.displayError();
+          });
         }
         displayError() {
           let divError = document.createElement("div");
@@ -84,11 +86,11 @@
     "notesApi.js"(exports, module) {
       var NotesApi2 = class {
         loadNotes(callbackFunction, failureFunction) {
-          const fetchPromise = fetch("http://localhost:3000/notes");
-          fetchPromise.then((response) => response.json()).then((data) => {
-            callbackFunction(data);
+          const fetchResponse = fetch("http://localhost:3000/notes");
+          fetchResponse.catch(() => {
+            failureFunction();
           });
-          fetchPromise.catch(() => failureFunction());
+          fetchResponse.then((response) => response.json()).then((data) => callbackFunction(data));
         }
         createNote(newNote) {
           const contentObj = { "content": newNote };
