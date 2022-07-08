@@ -41,7 +41,7 @@
           this.buttonEl = document.querySelector("#add-note-btn");
           this.buttonEl.addEventListener("click", () => {
             this.addNewNote();
-            this.displayNotes();
+            this.displayNotesFromApi();
           });
         }
         displayNotes() {
@@ -56,11 +56,14 @@
         }
         addNewNote() {
           const inputEl = document.querySelector("#new-note");
-          this.model.addNote(inputEl.value);
+          if (inputEl.value != "") {
+            this.api.createNote(inputEl.value);
+          }
           inputEl.value = "";
         }
         displayNotesFromApi() {
           this.api.loadNotes((notes) => {
+            this.model.reset();
             this.model.setNotes(notes);
             this.displayNotes();
           });
@@ -77,6 +80,16 @@
         loadNotes(callbackFunction) {
           fetch("http://localhost:3000/notes").then((response) => response.json()).then((data) => {
             callbackFunction(data);
+          });
+        }
+        createNote(newNote) {
+          const contentObj = { "content": newNote };
+          fetch("http://localhost:3000/notes", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(contentObj)
           });
         }
       };

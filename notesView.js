@@ -6,7 +6,7 @@ class NotesView {
     this.buttonEl = document.querySelector("#add-note-btn");
     this.buttonEl.addEventListener("click", () => {
       this.addNewNote();
-      this.displayNotes();
+      this.displayNotesFromApi();
     });
   }
   
@@ -23,16 +23,21 @@ class NotesView {
 
   addNewNote() {
     const inputEl = document.querySelector("#new-note");
-    this.model.addNote(inputEl.value);
+    if (inputEl.value != "") {
+      this.api.createNote(inputEl.value)
+    }
+    // this.model.addNote(inputEl.value);
     inputEl.value = ""
   }
 
   displayNotesFromApi() {
     this.api.loadNotes((notes) => { //using API call back function
+      this.model.reset();
       this.model.setNotes(notes);
       this.displayNotes();
     })
   }
 }
+
 
 module.exports = NotesView;

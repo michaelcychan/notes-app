@@ -5,6 +5,7 @@
 const NotesModel = require("../notesModel");
 const NotesApi = require('../notesApi');
 const NotesView = require("../notesView");
+// require ('jest-fetch-mock').enableFetchMocks();
 const fs = require("fs");
  
 describe("NotesView", () => {
@@ -35,20 +36,28 @@ describe("NotesView", () => {
   it("clicks button and adds new notes title", () => {
     document.body.innerHTML = fs.readFileSync(__dirname + "/../index.html");
     const model = new NotesModel();
-    const api = new NotesApi();
-    const view = new NotesView(model, api);
+    const fakeApi = {
+      loadNotes: (() => {
+        model.reset();
+        model.setNotes(["Hello World"]);
+        view.displayNotes();
+      }),
+      createNote: () => { return {content: 'Hello World'}},
+    }
+
+    const view = new NotesView(model, fakeApi);
 
     const inputEl = document.querySelector("#new-note");
     inputEl.value = "Hello World";
 
     const buttonEl = document.querySelector("#add-note-btn");
-    buttonEl.click();
-
-    expect(document.body.querySelectorAll("div.note").length).toStrictEqual(1);
-    expect(document.body.querySelector("div.note").innerHTML).toEqual(
+    buttonEl.click()
+      expect(document.body.querySelectorAll("div.note").length).toEqual(1);
+      expect(document.body.querySelector("div.note").innerHTML).toEqual(
       "Hello World"
-    );
+    )
   });
+
   it("clicks button and keeps the same number of note ", () => {
     document.body.innerHTML = fs.readFileSync(__dirname + "/../index.html");
     const model = new NotesModel();
